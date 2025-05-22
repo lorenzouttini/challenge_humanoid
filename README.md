@@ -220,11 +220,11 @@ Both controllers were tested in a high-frequency environment with a control loop
 <!-- </div> --> -->
 
 <div align="center">
-  <a href="https://github.com/user-attachments/assets/4097543b-b1a3-4236-9058-9c80316c3e5a">
-    <img src="src/taskA/screnshots/taskA_videoPD" alt="PyBullet Controller" width="45%" />
+  <a href="https://github.com/user-attachments/assets/4097543b-b1a3-4236-9058-9c80316c3e5a.mp4">
+    <img src="src/taskA/screnshots/taskA_videoPD.png" alt="PyBullet Controller" width="45%" />
   </a>
-  <a href="https://github.com/user-attachments/assets/8abf9094-45c6-4d1d-802e-aebbbc05e6d0">
-    <img src="src/taskA/screnshots/taskA_videoPD" alt="PD Controller" width="45%" />
+  <a href="https://github.com/user-attachments/assets/8abf9094-45c6-4d1d-802e-aebbbc05e6d0.mp4">
+    <img src="src/taskA/screnshots/taskA_videoPD.png" alt="PD Controller" width="45%" />
   </a>
 </div>
 
