@@ -48,7 +48,7 @@ def main(args):
     # Start video logging
     log_dir = os.path.join(os.path.dirname(__file__), "videos")
     os.makedirs(log_dir, exist_ok=True)
-    video_path = os.path.join(log_dir, "simulation_PyBullet_eta0.01.mp4")
+    video_path = os.path.join(log_dir, "simulation_PyBullet.mp4")
     video_log_id = p.startStateLogging(
         loggingType=p.STATE_LOGGING_VIDEO_MP4,
         fileName=video_path
@@ -118,7 +118,7 @@ def main(args):
         # Compute repulsive force from all link midpoints
         midpoints = get_link_midpoints(last_valid_angles, L)
         total_repulse = np.zeros(2)
-        eta = 0.01
+        eta = 0.05
         d0 = L
         for pt in midpoints:
             total_repulse += compute_repulsive_force(
