@@ -406,17 +406,22 @@ As the videos illustrutate, we can state that:
 - `η = 0.05`: **Balanced** — achieved the **best trade-off** between **safety and trajectory stability**.
 
 
-
-
 ---
 
 ## 📊 Future Improvements
 
-Possible/potential improvements
-- Implement collisions and maybe use a different simulator environment for this (Gazebo or Mujoco)
-- Extend the task in 3D dimensions
-- Explore more advanced controllers (e.g., MPC)
-- Explore more advanced state estimation (e.g., Kalman Filters)
+While the current implementation successfully demonstrates target tracking, obstacle avoidance, and joint-level control in a 2D planar environment, several directions could be explored to enhance the realism, scalability, and robustness of the system:
 
+- **Physics-Based Collision Handling**  
+  Integrating proper collision detection and response (e.g., via MuJoCo or Gazebo) would improve the realism of obstacle interactions, enabling full-body collision management beyond artificial potential fields.
 
----
+- **3D Extension**  
+  Transitioning from planar motion to full 3D control would allow more complex tasks and environments, introducing new challenges such as spatial orientation, vertical workspace constraints, and joint configuration complexity.
+
+- **Advanced Control Schemes**  
+  Incorporating more sophisticated controllers such as Model Predictive Control (MPC) or adaptive control methods could improve precision, constraint awareness, and performance in dynamic and unpredictable environments.
+
+- **State Estimation Enhancements**  
+  Leveraging estimators such as Kalman Filters or Extended Kalman Filters (EKFs) could enhance robustness in scenarios with sensor noise or partially observable states.
+
+These improvements would create the basis for more realistic robotic simulations and better preparation for real-world deployment scenarios.
