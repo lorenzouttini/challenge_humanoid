@@ -212,21 +212,14 @@ Both controllers were tested in a high-frequency environment with a control loop
 
 #### 🎥 Simulation Videos
 
-
-
-<!-- <div align="center">
-  <img src="https://github.com/user-attachments/assets/4097543b-b1a3-4236-9058-9c80316c3e5a" alt="PyBullet Controller" width="45%" />
-  <!-- <img src="https://github.com/user-attachments/assets/8abf9094-45c6-4d1d-802e-aebbbc05e6d0" alt="PD Controller" width="45%" /> -->
-<!-- </div> --> -->
-
 <div align="center">
-  <a href="https://github.com/user-attachments/assets/4097543b-b1a3-4236-9058-9c80316c3e5a.mp4">
-    <img src="src/taskA/screnshots/taskA_videoPD.png" alt="PyBullet Controller" width="45%" />
-  </a>
-  <a href="https://github.com/user-attachments/assets/8abf9094-45c6-4d1d-802e-aebbbc05e6d0.mp4">
-    <img src="src/taskA/screnshots/taskA_videoPD.png" alt="PD Controller" width="45%" />
-  </a>
+    <img height="320" alt="taskA_PyBullet" src="src/taskA/screenshots/taskA_simulation_PyBullet.gif" style="margin-right: 2px">
+    <img height="320" alt="taskA_PD" src="src/taskA/screenshots/taskA_simulation_PD.gif">
 </div>
+
+<p align="center">
+  <b>Figure:</b> Side-by-side comparison of <b>PyBullet Built-In</b> (left) and <b>PD</b> (right) controller performance during Task A simulation.
+</p>
 
 *Note: The robot appears very fast due to the high control frequency. You can visually observe that the PyBullet controller tracks the target more tightly, while the PD controller occasionally lags due to dynamics and torque control nuances.*
 
@@ -255,7 +248,7 @@ The following table reports the **tracking error per joint** (difference between
 - Both methods achieve **milliradian precision**, but the **integrated PyBullet controller is more consistent** at this frequency.
 
 
-## 📉 Task B: Lower Frequency Tracking
+### 📉 Task B: Lower Frequency Tracking
 
 This task evaluates the performance of both controllers when operating at reduced frequencies:
 
@@ -264,8 +257,19 @@ This task evaluates the performance of both controllers when operating at reduce
 
 The objective is to observe how reduced responsiveness affects both joint accuracy and end-effector tracking.
 
+#### 🎥 Simulation Videos
 
-### 📈 End-Effector Tracking Error
+<div align="center">
+    <img height="320" alt="taskB_PyBullet" src="src/taskB/screenshots/taskB_simulation_PyBullet.gif" style="margin-right: 2px">
+    <img height="320" alt="taskB_PD" src="src/taskB/screenshots/taskB_simulation_PD.gif">
+</div>
+
+<p align="center">
+  <b>Figure:</b> Side-by-side comparison of <b>PyBullet Built-In</b> (left) and <b>PD</b> (right) controller performance during Task B simulation.
+</p>
+
+
+#### 📈 End-Effector Tracking Error
 
 Although the control and target frequencies are much lower than in Task A, the end-effector tracking error (computed from IK and FK) remains extremely small and in the same range (1e-16):
 
@@ -281,7 +285,7 @@ This is expected because:
 Therefore, the calculated target vs. actual target distance reflects almost no error — it's purely geometric, not dynamic.
 
 
-### 📐 Joint Angle Tracking Error
+#### 📐 Joint Angle Tracking Error
 
 Unlike the end-effector, actual joint positions must follow the computed reference over time.  
 At lower frequencies, control becomes more challenging, and we observe greater joint tracking error.
@@ -299,16 +303,14 @@ At lower frequencies, control becomes more challenging, and we observe greater j
   - The robot reacts more slowly to new targets, causing lag between the desired and actual joint angles
 
 
-### Comparison between TaskA and TaskB results
-
-### 📊 Comparison between Task A and Task B Results
+#### 📊 Comparison between Task A and Task B Results
 
 The results from Task A and Task B highlight how crucial the control-to-target frequency ratio is in determining control precision. In Task A, the control loop operated at 1000 Hz while target updates occurred at 30 Hz, resulting in a ratio of approximately **33.3**. This high ratio allowed the system to make frequent control adjustments for each new target, enabling precise joint and end-effector tracking.
 
 In contrast, Task B operated with a much lower control loop frequency of 50 Hz and a target update rate of 5 Hz, yielding a ratio of just **10**. This reduction significantly limited the controller’s ability to respond to changes, leading to increased joint tracking errors. While end-effector errors remained minimal due to the geometric nature of IK and FK computations, the lower responsiveness in Task B directly impacted how well the actual joint positions followed the desired trajectories. Overall, the comparison illustrates that lower control frequencies make the robot’s capacity worse to correct deviations in real time, emphasizing the importance of a high control-to-target ratio for effective tracking.
 
 
-## 🛑 Task Optional: Obstacle Avoidance & Joint Constraints
+### 🛑 Task Optional: Obstacle Avoidance & Joint Constraints
 
 In this final task, we extend our control pipeline to handle **obstacle avoidance** and **joint angle wrapping**, introducing additional realism and complexity into the control system.
 
@@ -329,11 +331,16 @@ We maintained the **low frequency setup** from Task B:
 This allows for easier visualization of avoidance behavior and joint correction dynamics.
 
 
-### 🎥 Simulation Results
+#### 🎥 Simulation Results
 
-| PyBullet Controller | PD Controller |
-|---------------------|---------------|
-<!-- | ![PyBullet](videos/preview_PyBullet.png) <br> `simulation_PyBullet.mp4` | ![PD](videos/preview_PD.png) <br> `simulation_PD.mp4` | -->
+<div align="center">
+    <img height="320" alt="taskOptional_PyBullet" src="src/taskOptional/screenshots/taskOpt_simulation_PyBullet.gif" style="margin-right: 2px">
+    <img height="320" alt="taskOptional_PD" src="src/taskOptional/screenshots/taskOpt_simulation_PD.gif">
+</div>
+
+<p align="center">
+  <b>Figure:</b> Side-by-side comparison of <b>PyBullet Built-In</b> (left) and <b>PD</b> (right) controller performance during Task Optional simulation.
+</p>
 
 **Observations:**
 
@@ -342,7 +349,7 @@ The **PyBullet controller** demonstrates precise and stable behavior during obst
 In contrast, the **PD controller**, while exhibiting faster motion along straight segments, shows signs of instability when influenced by the repulsive field. Its ability to recover to the reference trajectory after avoidance is limited, often resulting in prolonged deviation or oscillatory behavior. This suggests that while the PD controller may offer speed advantages in undisturbed motion (because of manual tuning of the gains), its responsiveness is not as reliable under more complex environments.
 
 
-### 📈 End-Effector Tracking Error (Summary)
+#### 📈 End-Effector Tracking Error (Summary)
 
 <p align="center">
   <img src="src/taskOptional/figures/tableOpt_ee.png" width="120"/>
@@ -351,7 +358,7 @@ In contrast, the **PD controller**, while exhibiting faster motion along straigh
 These errors are **significantly higher** than in previous tasks, due to the **intentional displacement** of the end-effector caused by the repulsive field.
 
 
-### 📐 Joint Angle Tracking Error
+#### 📐 Joint Angle Tracking Error
 
 <p align="center">
   <img src="src/taskOptional/figures/tableOpt_tracking.png" width="300"/>
@@ -376,11 +383,19 @@ In summary, the PyBullet controller prioritizes **safe and stable interaction** 
 
 
 
-### 🔍 Tuning `η` (Repulsive Strength)
+#### 🔍 Tuning `η` (Repulsive Strength)
 
 We experimented with three different values of `η` using the PyBullet controller. We show some *demo videos* to briefly analyze the importance of this parameter in the Artificial Potentail Fields:
 
+<div align="center">
+    <img width="30%" alt="taskOpt_PyBullet_0.1" src="src/taskOptional/screenshots/taskOpt_simulation_PyBullet_eta0_1.gif" style="margin-right: 2px">
+    <img width="30%" alt="taskOpt_PyBullet" src="src/taskOptional/screenshots/taskOpt_simulation_PyBullet.gif">
+    <img width="30%" alt="taskOpt_PyBullet_0.01" src="src/taskOptional/screenshots/taskOpt_simulation_PyBullet_eta0_01.gif">
+</div>
 
+<p align="center">
+  <b>Figure:</b> Side-by-side comparison of <b>PyBullet Built-In</b> controller for different values of eta (<b> 0.1, 0.05, 0.01 </b>).
+</p>
 
 
 
