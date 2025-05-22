@@ -1,0 +1,32 @@
+SIMULATION ERRORS - Task B
+    CONTROL FREQ = 50 Hz
+    TARGET FREQ  = 5 Hz
+
+#######################################################
+End-Effector Tracking Error for PD controller:
+Mean Error: 1.1698003635753616e-16
+Max Error: 4.440892098500626e-16
+Min Error: 0.0
+
+Joint Tracking Error Stats for PD controller:
+Joint 1: Mean = 0.21014, Max = 1.10216, Min = 0.00043
+Joint 2: Mean = 0.10532, Max = 2.09440, Min = 0.00008
+Joint 3: Mean = 0.12977, Max = 1.04720, Min = 0.00030
+
+
+#######################################################
+End-Effector Tracking Error for PyBullet controller:
+Mean Error: 1.1698003635753616e-16
+Max Error: 4.440892098500626e-16
+Min Error: 0.0
+
+Joint Tracking Error Stats for PyBullet controller:
+Joint 1: Mean = 0.20118, Max = 1.04720, Min = 0.00000
+Joint 2: Mean = 0.11895, Max = 2.09440, Min = 0.00000
+Joint 3: Mean = 0.20268, Max = 1.04720, Min = 0.00000
+
+
+
+
+
+
