@@ -214,19 +214,19 @@ Both controllers were tested in a high-frequency environment with a control loop
 
 
 
-<div align="center">
+<!-- <div align="center">
   <img src="https://github.com/user-attachments/assets/4097543b-b1a3-4236-9058-9c80316c3e5a" alt="PyBullet Controller" width="45%" />
   <!-- <img src="https://github.com/user-attachments/assets/8abf9094-45c6-4d1d-802e-aebbbc05e6d0" alt="PD Controller" width="45%" /> -->
-</div>
+<!-- </div> --> -->
 
-<!-- <div align="center">
+<div align="center">
   <a href="https://github.com/user-attachments/assets/4097543b-b1a3-4236-9058-9c80316c3e5a">
     <img src="src/taskA/screnshots/taskA_videoPD" alt="PyBullet Controller" width="45%" />
   </a>
   <a href="https://github.com/user-attachments/assets/8abf9094-45c6-4d1d-802e-aebbbc05e6d0">
     <img src="src/taskA/screnshots/taskA_videoPD" alt="PD Controller" width="45%" />
   </a>
-</div> -->
+</div>
 
 *Note: The robot appears very fast due to the high control frequency. You can visually observe that the PyBullet controller tracks the target more tightly, while the PD controller occasionally lags due to dynamics and torque control nuances.*
 
