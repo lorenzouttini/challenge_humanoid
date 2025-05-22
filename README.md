@@ -34,36 +34,30 @@ git clone https://github.com/lorenzouttini/challenge_humanoid.git
 cd challenge_humanoid
 ```
 
-### 2. Install dependencies
+### 2. Create and Activate a Python Environment
 
-You can either install manually or with `conda`.
+It is recommended to use `conda` to manage the environment.
 
 #### Using conda:
 ```bash
 conda create -n rrr_challenge python=3.11
 conda activate rrr_challenge
+```
+
+> If you prefer not to create a new environment, you can simply install the required libraries in any existing Python environment by running the next step.
+
+### 3. Install Dependencies
+Install all required packages using the `requirements.txt` file:
+
+```bash
 pip install -r requirements.txt
 ```
 
-#### Required packages:
-```python
-import pybullet as p
-import pybullet_data
-import time
-import numpy as np
-import os
-import sys
-import matplotlib.pyplot as plt
-import argparse
-```
+This will install the following essential libraries:
+- `numpy`
+- `matplotlib`
+- `pybullet`
 
-### 3. Requirements file (`requirements.txt`)
-
-```
-pybullet
-numpy
-matplotlib
-```
 
 ---
 
