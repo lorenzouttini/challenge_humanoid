@@ -7,7 +7,7 @@ import sys
 import matplotlib.pyplot as plt
 import argparse
 
-
+# Add the parent "src" directory to sys.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from kinematics import inverse_kinematics, forward_kinematics
 from plots import plot_tracking_results
@@ -57,9 +57,9 @@ def main(args):
     cameraTargetPosition=[1.0, 0, 0]
     )
 
-    # Initialize timing
-    control_dt = 1.0 / CONTROL_FREQ
-    target_dt = 1.0 / TARGET_FREQ
+    # Set dt for simulation
+    control_dt = 1.0 / CONTROL_FREQ         # 1 kHz
+    target_dt = 1.0 / TARGET_FREQ           # 30 Hz
     sim_time = 0.0
     last_target_update = -target_dt
 
@@ -74,7 +74,7 @@ def main(args):
     )
 
     target_id = p.createMultiBody(
-        baseMass=0,  # Static
+        baseMass=0,
         baseVisualShapeIndex=visual_shape_id,
         basePosition=[current_target[0], current_target[1], 0],
     )
@@ -92,7 +92,7 @@ def main(args):
             current_target = get_target_position(sim_time)
             last_target_update = sim_time
 
-            # Update target sphere position (in XY plane, Z = 0)
+            # Update target sphere position
             p.resetBasePositionAndOrientation(
                 target_id,
                 posObj=[current_target[0], current_target[1], 0],
@@ -104,24 +104,26 @@ def main(args):
             joint_angles = inverse_kinematics(*current_target)
         except ValueError as e:
             print(f"[Warning] IK failed at t={sim_time:.3f}s: {e}")
-            joint_angles = [0.0] * num_joints  # fallback
+            joint_angles = [0.0] * num_joints 
         
         # Compute actual end-effector position
         ee_pos = forward_kinematics(*joint_angles)
         joint_states = p.getJointStates(robot_id, list(range(num_joints)))
+        # Get current joint positions
         current_positions = np.array([s[0] for s in joint_states])
 
         # === PyBullet controller ===
         for i in range(num_joints):
+            # Set joint motor control
             p.setJointMotorControl2(robot_id, i, 
                 p.POSITION_CONTROL, 
                 targetPosition=joint_angles[i])
 
         # Errors logging
-        joint_errors = np.abs(joint_angles - current_positions)
+        joint_errors = np.abs(joint_angles - current_positions)       # Joint tracking error
         per_joint_errors.append(joint_errors.copy())
 
-        error = np.linalg.norm(ee_pos - current_target)
+        error = np.linalg.norm(ee_pos - current_target)               # End-effector tracking error
         tracking_errors.append(error)
 
         log_time.append(sim_time)
@@ -140,7 +142,7 @@ def main(args):
     p.stopStateLogging(video_log_id)
     p.disconnect()
 
-    # Summary
+    # Define the error metrics
     tracking_errors = np.array(tracking_errors)
     per_joint_errors = np.array(per_joint_errors)  # shape: [timesteps, 3]
     mean_joint_errors = np.mean(per_joint_errors, axis=0)
@@ -148,9 +150,9 @@ def main(args):
     min_joint_errors = np.min(per_joint_errors, axis=0)
 
 
+    # Save the results to a .txt file
     base_dir = os.path.dirname(__file__)
     log_path = os.path.join(base_dir, "tracking_errors.txt")
-    # if write:
     if args.write:
         with open(log_path, "a") as f:
             f.write("\n\nEnd-Effector Tracking Error for PyBullet controller:\n")
@@ -163,9 +165,8 @@ def main(args):
                 f.write(f"Joint {i+1}: Mean = {mean_joint_errors[i]:.5f}, Max = {max_joint_errors[i]:.5f}, Min = {min_joint_errors[i]:.5f}\n")
 
 
-    # Plots
+    # Plot the tracking errors
     save_path = os.path.join(os.path.dirname(__file__), "figures")
-    # if plots:
     if args.plots:
         plot_tracking_results(log_time, log_joint_actual, log_joint_target, log_ee_actual, log_ee_target, tracking_errors, save_path, PD=False)
 

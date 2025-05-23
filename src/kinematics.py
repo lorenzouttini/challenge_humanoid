@@ -6,15 +6,19 @@ def forward_kinematics(theta1, theta2, theta3):
     """
     Compute (x, y) of the end-effector given joint angles in radians.
     """
+    # Compute positions of first joint
     x1 = L * np.cos(theta1)
     y1 = L * np.sin(theta1)
 
+    # Compute positions of second joint
     x2 = L * np.cos(theta1 + theta2)
     y2 = L * np.sin(theta1 + theta2)
 
+    # Compute positions of third joint
     x3 = L * np.cos(theta1 + theta2 + theta3)
     y3 = L * np.sin(theta1 + theta2 + theta3)
 
+    # Compute end-effector position
     x = x1 + x2 + x3
     y = y1 + y2 + y3
 

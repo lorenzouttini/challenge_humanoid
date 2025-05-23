@@ -19,9 +19,6 @@ TARGET_FREQ = 30.0         # Target updates at 30 Hz
 CONTROL_FREQ = 1000.0      # Robot control loop at 1 kHz
 SIM_DURATION = 10.0        # seconds
 
-plots = True
-write = False
-
 
 # === Main ===
 
@@ -59,9 +56,9 @@ def main(args):
     )
 
 
-    # Target visual
-    control_dt = 1.0 / CONTROL_FREQ
-    target_dt = 1.0 / TARGET_FREQ
+    # Set dt for simulation
+    control_dt = 1.0 / CONTROL_FREQ         # 1 kHz
+    target_dt = 1.0 / TARGET_FREQ           # 30 Hz   
     sim_time = 0.0
     last_target_update = -target_dt
 
@@ -118,6 +115,7 @@ def main(args):
         # Compute actual end-effector position
         ee_pos = forward_kinematics(*joint_angles)
         joint_states = p.getJointStates(robot_id, list(range(num_joints)))
+        # Get current joint positions and velocities
         current_positions = np.array([s[0] for s in joint_states])
         current_velocities = np.array([s[1] for s in joint_states])
 
@@ -125,10 +123,12 @@ def main(args):
         position_error = joint_angles - current_positions
         velocity_error = -current_velocities
 
+        # Define PD gains (manually tuned)
         Kp = np.array([2550.0, 2550.0, 2550.0])
         Kd = np.array([35.0, 35.0, 30.0])
         torques = Kp * position_error + Kd * velocity_error
 
+        # Apply torques to joints
         for i in range(num_joints):
             p.setJointMotorControl2(robot_id, i,
                 controlMode=p.TORQUE_CONTROL,
@@ -136,10 +136,10 @@ def main(args):
 
 
         # Errors logging
-        joint_errors = np.abs(joint_angles - current_positions)
+        joint_errors = np.abs(joint_angles - current_positions)     # Joint errors  
         per_joint_errors.append(joint_errors.copy())
 
-        error = np.linalg.norm(ee_pos - current_target)
+        error = np.linalg.norm(ee_pos - current_target)             # End-effector error
         tracking_errors.append(error)
 
         log_time.append(sim_time)
@@ -158,17 +158,17 @@ def main(args):
     p.stopStateLogging(video_log_id)
     p.disconnect()
 
-    # Summary
+    # Define the error metrics
     tracking_errors = np.array(tracking_errors)
-    per_joint_errors = np.array(per_joint_errors)  # shape: [timesteps, 3]
+    per_joint_errors = np.array(per_joint_errors)
     mean_joint_errors = np.mean(per_joint_errors, axis=0)
     max_joint_errors = np.max(per_joint_errors, axis=0)
     min_joint_errors = np.min(per_joint_errors, axis=0)
 
 
+    # Save the results to a .txt file
     base_dir = os.path.dirname(__file__)
     log_path = os.path.join(base_dir, "tracking_errors.txt")
-    # if write:
     if args.write:
         with open(log_path, "a") as f:
             f.write("\n\nEnd-Effector Tracking Error for PD controller:\n")
@@ -181,9 +181,8 @@ def main(args):
                 f.write(f"Joint {i+1}: Mean = {mean_joint_errors[i]:.5f}, Max = {max_joint_errors[i]:.5f}, Min = {min_joint_errors[i]:.5f}\n")
 
 
-    # Plots
+    # Plot the tracking errors
     save_path = os.path.join(os.path.dirname(__file__), "figures")
-    # if plots:
     if args.plots:
         plot_tracking_results(log_time, log_joint_actual, log_joint_target, log_ee_actual, log_ee_target, tracking_errors, save_path, PD=True)
 

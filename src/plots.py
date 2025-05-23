@@ -20,6 +20,7 @@ def plot_tracking_results(log_time, log_joint_actual, log_joint_target,
     fig, axs = plt.subplots(3, 1, figsize=(10, 8), sharex=True)
     joint_labels = ['Joint 1', 'Joint 2', 'Joint 3']
 
+    # Plot joint angles
     for i in range(3):
         axs[i].plot(log_time, log_joint_target[:, i], color='orange', linestyle='--', marker='o', label='Target')
         axs[i].plot(log_time, log_joint_actual[:, i], color='blue', linestyle='-', label='Actual')
@@ -45,7 +46,6 @@ def plot_tracking_results(log_time, log_joint_actual, log_joint_target,
     plt.ylabel("Error (Euclidean distance)")
     plt.grid(True)
 
-    #title = "Tracking Error Over Time - PD Controller" if PD else "Tracking Error Over Time - PyBullet Controller"
     title = "End-Effector Tracking Error Over Time"
     plt.title(title)
     plt.tight_layout()

@@ -2,8 +2,6 @@
 
 This project tackles a robotics challenge focused on controlling a planar 3-DOF (RRR) robot arm to track a moving 2D target, with increasing complexity across three tasks. We implemented and compared two types of controllers while incorporating obstacle avoidance and joint limit enforcement.
 
-CONTROLLARE CODICE (AGGIUNGERE COMMENTI) E VIDEO
-
 ---
 
 ## 🚀 Challenge Overview
@@ -105,6 +103,8 @@ This scripts include:
 python src/taskC/controllerOpt_PD.py
 python src/taskC/controllerOpt_PyBullet.py
 ```
+
+> **Note:** Any files denominated with *PyBullet* indicate the type of controller, not the simulation environment. More details are provided in the next section.
 
 ---
 
@@ -418,7 +418,7 @@ While the current implementation successfully demonstrates target tracking, obst
   Transitioning from planar motion to full 3D control would allow more complex tasks and environments, introducing new challenges such as spatial orientation, vertical workspace constraints, and joint configuration complexity.
 
 - **Advanced Control Schemes**  
-  Incorporating more sophisticated controllers such as Model Predictive Control (MPC) or adaptive control methods could improve precision, constraint awareness, and performance in dynamic and unpredictable environments.
+  Incorporating more sophisticated controllers such as Model Predictive Control (MPC) or adaptive control methods could improve precision, constraint awareness, and performance in dynamic and unpredictable environments. Moreover, tuning the gains of PD more accurately for each task can lead to possible improvements.
 
 - **State Estimation Enhancements**  
   Leveraging estimators such as Kalman Filters or Extended Kalman Filters (EKFs) could enhance robustness in scenarios with sensor noise or partially observable states.

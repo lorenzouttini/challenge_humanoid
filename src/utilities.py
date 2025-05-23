@@ -8,7 +8,7 @@ L = 1.0                                     # Link length
 
 def get_target_position(t, L=L, f=5.0):
     """
-    Generate a target position in a sinusoidal trajectory.
+    Generate the target position in a sinusoidal trajectory.
     """
     x = 2 * L
     y = L * np.sin(2 * np.pi * f * t)
@@ -32,11 +32,15 @@ def get_link_midpoints(joint_angles, link_length=L):
     """
     θ1, θ2, θ3 = joint_angles
     p0 = np.array([0, 0])
+    
+    # Calculate positions of each joint
     p1 = p0 + link_length * np.array([np.cos(θ1), np.sin(θ1)])
     p2 = p1 + link_length * np.array([np.cos(θ1 + θ2), np.sin(θ1 + θ2)])
     p3 = p2 + link_length * np.array([np.cos(θ1 + θ2 + θ3), np.sin(θ1 + θ2 + θ3)])
     
+    # Calculate midpoints of each link
     mid1 = (p0 + p1) / 2
     mid2 = (p1 + p2) / 2
     mid3 = (p2 + p3) / 2
+
     return [mid1, mid2, mid3]

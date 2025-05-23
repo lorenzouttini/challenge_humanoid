@@ -27,6 +27,7 @@ obstacle_center = np.array([2*L, 0.5 * L])  # Obstacle center
 obstacle_radius = 0.125 * L                 # Obstacle radius
 
 
+
 # === Main ===
 
 def main(args):
@@ -48,6 +49,7 @@ def main(args):
     log_dir = os.path.join(os.path.dirname(__file__), "videos")
     os.makedirs(log_dir, exist_ok=True)
     video_path = os.path.join(log_dir, "simulation_PyBullet.mp4")
+    
     video_log_id = p.startStateLogging(
         loggingType=p.STATE_LOGGING_VIDEO_MP4,
         fileName=video_path
@@ -61,7 +63,7 @@ def main(args):
     cameraTargetPosition=[1.0, 0, 0]
     )
 
-    # Obstacle visual
+    # Set obstacle visual (red sphere)
     obstacle_visual = p.createVisualShape(
         p.GEOM_SPHERE, 
         radius=obstacle_radius, 
@@ -73,9 +75,9 @@ def main(args):
         basePosition=[*obstacle_center, 0]
     )
 
-    # Initialize timing
-    control_dt = 1.0 / CONTROL_FREQ             # Control time step
-    target_dt = 1.0 / TARGET_FREQ               # Target update time step
+    # Set dt for simulation
+    control_dt = 1.0 / CONTROL_FREQ             # 50 Hz
+    target_dt = 1.0 / TARGET_FREQ               # 5 Hz
     sim_time = 0.0
     last_target_update = -target_dt
     
@@ -117,15 +119,18 @@ def main(args):
         # Compute repulsive force from all link midpoints
         midpoints = get_link_midpoints(last_valid_angles, L)
         total_repulse = np.zeros(2)
-        eta = 0.05
-        d0 = L
+        eta = 0.05                              # Repulsion coefficient
+        d0 = L                                  # Repulsion distance  
         for pt in midpoints:
+            # Compute repulsive force from each link midpoint and accumulate
             total_repulse += compute_repulsive_force(
                 pt, obstacle_center, obstacle_radius, eta=eta, d0=d0
             )
 
-        # Project repulsion orthogonal to motion direction
+        # Compute actual end-effector position
         ee_pos = forward_kinematics(*last_valid_angles)
+
+        # Project repulsion orthogonal to motion direction
         to_target = current_target - ee_pos
         direction = to_target / (np.linalg.norm(to_target) + 1e-6)
         parallel = np.dot(total_repulse, direction) * direction
@@ -141,20 +146,21 @@ def main(args):
         # Compute IK for current target
         try:
             joint_angles = inverse_kinematics(*modified_target)
+            # Clamp joint angles to limits
             joint_angles = np.clip(joint_angles, -np.pi, np.pi)
             last_valid_angles = joint_angles
         except Exception as e:
             print(f"[Warning] IK failed at t={sim_time:.3f}s: {e}")
             joint_angles = last_valid_angles
 
-
-        # State and logging
-        ee_pos = forward_kinematics(*joint_angles)
+        # Compute Joint States
         joint_states = p.getJointStates(robot_id, list(range(num_joints)))
+        # Get current joint positions
         current_positions = np.array([s[0] for s in joint_states])
         
         # === PyBullet controller ===
         for i in range(num_joints):
+            # Set joint motor control
             p.setJointMotorControl2(robot_id, i, 
                 p.POSITION_CONTROL, 
                 targetPosition=joint_angles[i])
@@ -163,6 +169,7 @@ def main(args):
         joint_errors = np.abs(joint_angles - current_positions)
         per_joint_errors.append(joint_errors.copy())
 
+        ee_pos = forward_kinematics(*joint_angles)
         error = np.linalg.norm(ee_pos - current_target)
         tracking_errors.append(error)
 
@@ -182,16 +189,16 @@ def main(args):
     p.stopStateLogging(video_log_id)
     p.disconnect()
 
-    # Summary
+    # Define the error metrics
     tracking_errors = np.array(tracking_errors)
-    per_joint_errors = np.array(per_joint_errors)  # shape: [timesteps, 3]
+    per_joint_errors = np.array(per_joint_errors)  
     mean_joint_errors = np.mean(per_joint_errors, axis=0)
     max_joint_errors = np.max(per_joint_errors, axis=0)
     min_joint_errors = np.min(per_joint_errors, axis=0)
 
+    # Save the results to a .txt file
     base_dir = os.path.dirname(__file__)
     log_path = os.path.join(base_dir, "tracking_errors.txt")
-    # if write:
     if args.write:
         with open(log_path, "a") as f:
             f.write("\n\nEnd-Effector Tracking Error for PyBullet controller:\n")
@@ -204,9 +211,8 @@ def main(args):
                 f.write(f"Joint {i+1}: Mean = {mean_joint_errors[i]:.5f}, Max = {max_joint_errors[i]:.5f}, Min = {min_joint_errors[i]:.5f}\n")
 
 
-    # Plots
+    # Plot the tracking errors
     save_path = os.path.join(os.path.dirname(__file__), "figures")
-    # if plots:
     if args.plots:
         plot_tracking_results(log_time, log_joint_actual, log_joint_target, log_ee_actual, log_ee_target, tracking_errors, save_path, PD=False)
 
