@@ -58,6 +58,51 @@ This will install the following essential libraries:
 - `matplotlib`
 - `pybullet`
 
+---
+
+## ▶️ How to Run
+
+All code is organized under the `src/` folder, divided by task.
+
+Each script supports the following optional flags:
+
+- `--plot`: Generate and save new tracking plots in the folder `src/task{current_task}/figures`.
+- `--write`: Save tracking error logs in the file `tracking_errors.txt`.
+
+You can run each script with these flags to regenerate plots or log tracking errors.  
+All videos, plots, and result files shown in the next sections have already been generated and are stored in their respective folders (`taskA`, `taskB`, `taskOptional`) and subfolders (`figures`, `plots`).
+
+Once the script runs, the simulation window remains open for about 15 seconds.
+
+> **Note:** If your Linux system does not support GUI mode, comment out the line `p.connect(p.GUI)` and uncomment `p.connect(p.DIRECT)` at the beginning of the main function. This disables visual output, but the simulation will still run.  
+> In both cases, all simulation videos are automatically saved in the `videos/` folder corresponding to each task.
+
+### 🧪 Task A: Basic Tracking
+
+```bash
+python src/taskA/controller_PD.py
+python src/taskA/controller_PyBullet.py
+```
+
+### 📈 Task B: Increased Frequency
+
+Same structure as Task A. The only difference is the **target frequency is increased** in the source scripts:
+```bash
+python src/taskB/controller_PD.py
+python src/taskB/controller_PyBullet.py
+```
+
+### 🚧 Task C: Obstacle Avoidance + Constraints
+
+This scripts include:
+- Repulsive force field from a predefined obstacle
+- Joint limit enforcement
+- Angle wrapping
+
+```bash
+python src/taskC/controllerOpt_PD.py
+python src/taskC/controllerOpt_PyBullet.py
+```
 
 ---
 
@@ -147,48 +192,6 @@ Handles all result visualizations:
 These modules allow each task script to remain clean, focused, and easy to maintain.
 """
 
----
-
-## ▶️ How to Run
-
-All code is organized under the `src/` folder, divided by task.
-
-Each script supports the following optional flags:
-
-- `--plot`: Generate and save new tracking plots in the folder `src/task{current_task}/figures`.
-- `--write`: Save tracking error logs in the file `tracking_errors.txt`.
-
-You can run each script with these flags to regenerate plots or log tracking errors.  
-All videos, plots, and result files shown in the next sections have already been generated and are stored in their respective folders (`taskA`, `taskB`, `taskOptional`) and subfolders (`figures`, `plots`).
-
-Once the script runs, the simulation shows up (for about 15 seconds).
-
-### 🧪 Task A: Basic Tracking
-
-```bash
-python src/taskA/controller_PD.py
-python src/taskA/controller_PyBullet.py
-```
-
-### 📈 Task B: Increased Frequency
-
-Same structure as Task A. The only difference is the **target frequency is increased** in the source scripts:
-```bash
-python src/taskB/controller_PD.py
-python src/taskB/controller_PyBullet.py
-```
-
-### 🚧 Task C: Obstacle Avoidance + Constraints
-
-This scripts include:
-- Repulsive force field from a predefined obstacle
-- Joint limit enforcement
-- Angle wrapping
-
-```bash
-python src/taskC/controllerOpt_PD.py
-python src/taskC/controllerOpt_PyBullet.py
-```
 
 ---
 

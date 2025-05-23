@@ -28,14 +28,16 @@ write = False
 def main(args):
 
     # Connect to PyBullet
-    p.connect(p.GUI)
+    p.connect(p.GUI)                # Comment for headless mode
+    # p.connect(p.DIRECT)           # Uncomment for headless mode
+
     p.setAdditionalSearchPath(pybullet_data.getDataPath())
     p.setGravity(0, 0, -9.81)
     p.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)
 
     # Load ground and robot
     p.loadURDF("plane.urdf")
-    robot_id = p.loadURDF("../urdf/rrr_box_robot.urdf", useFixedBase=True)
+    robot_id = p.loadURDF("urdf/rrr_box_robot.urdf", useFixedBase=True)
     num_joints = p.getNumJoints(robot_id)
 
     # Start video logging
@@ -151,7 +153,7 @@ def main(args):
         time.sleep(control_dt)
         sim_time += control_dt
 
-    print("Finished simulation.")
+    print("\nFinished simulation.")
     # Stop video logging
     p.stopStateLogging(video_log_id)
     p.disconnect()
