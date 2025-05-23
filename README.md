@@ -2,6 +2,8 @@
 
 This project tackles a robotics challenge focused on controlling a planar 3-DOF (RRR) robot arm to track a moving 2D target, with increasing complexity across three tasks. We implemented and compared two types of controllers while incorporating obstacle avoidance and joint limit enforcement.
 
+CONTROLLARE CODICE (AGGIUNGERE COMMENTI) E VIDEO
+
 ---
 
 ## 🚀 Challenge Overview
